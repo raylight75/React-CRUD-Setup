@@ -19,7 +19,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         bloodGroup: {
             type: Sequelize.STRING,
-        }
+        },
+        parentId: {
+            type: Sequelize.INTEGER
+        },
     });
 
     return User;

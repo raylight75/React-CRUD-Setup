@@ -2,6 +2,8 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { forwardRef } from 'react';
 import Avatar from 'react-avatar';
 import Select from 'react-select';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import MaterialTable from "material-table";
 import AddBox from '@material-ui/icons/AddBox';
@@ -42,22 +44,6 @@ const tableIcons = {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-const formReducer = (state, event) => {
-    if (event.reset) {
-        return {
-            apple: '',
-            count: 0,
-            name: '',
-            'gift-wrap': false,
-        }
-    }
-    return {
-        ...state,
-        [event.name]: event.value
-    }
-}
-
-
 const api = axios.create({
     baseURL: `http://localhost:8080`
 })
@@ -76,21 +62,23 @@ function Users() {
         { value: 'vanilla', label: 'Vanilla' }
     ]
 
+    const [startDate, setStartDate] = useState(new Date());
+
     var columns = [
         { title: "id", field: "id", hidden: true },
         { title: "Avatar", render: rowData => <Avatar maxInitials={1} size={40} round={true} name={rowData === undefined ? " " : rowData.name} /> },
         { title: "Select", render: rowData => <Select options={options} /> },
+        { title: "Date", render: rowData => <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} /> },
         { title: "Name", field: "name" },
         { title: "Email", field: "email" },
         { title: "Phone", field: "phone_number" },
         { title: "Addedd", field: "dob" },
-        { title: "Blood", field: "bloodGroup" }
+        { title: "Blood", field: "bloodGroup" },
+        { title: "Parent", field: "parentId" }
     ]
 
     const [data, setData] = useState([]); //table data
-    const [formData, setFormData] = useReducer(formReducer, {
-        count: 100
-    });
+
     //for error handling
     const [iserror, setIserror] = useState(false)
     const [errorMessages, setErrorMessages] = useState([])
@@ -218,7 +206,6 @@ function Users() {
                 .then(res => {
                     _data = _data.filter(t => t.id !== rowData[value].id);
                     setData(_data);
-                    //window.location.reload();
                 })
         }
     };
@@ -238,8 +225,7 @@ function Users() {
             <MaterialTable
                 title="Users"
                 columns={columns}
-                data={data}
-                parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
+                data={data}                
                 icons={tableIcons}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
@@ -256,6 +242,7 @@ function Users() {
                             handleRowDelete(oldData, resolve)
                         }),
                 }}
+                parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
                 options={{
                     pageSize: 10,
                     headerStyle: {

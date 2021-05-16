@@ -16,10 +16,11 @@ exports.createUser = (req, res) => {
         user.phone_number = req.body.phone_number;
         user.dob = req.body.dob;
         user.bloodGroup = req.body.bloodGroup;
+        user.parentId = req.body.parentId;
     
         // Save to MySQL database
         User.create(user, 
-                          {attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup"]})
+                          {attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup", "parentId"]})
                     .then(result => {    
                       res.status(200).json(result);
                     });
@@ -39,7 +40,7 @@ exports.createUser = (req, res) => {
 exports.users = (req, res) => {
     // find all User information from 
     try{
-        User.findAll({attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup"]})
+        User.findAll({attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup","parentId"]})
         .then(user => {
             res.status(200).json(user);
         })
@@ -56,7 +57,7 @@ exports.users = (req, res) => {
 
 exports.getUser = (req, res) => {
     User.findByPk(req.params.id, 
-                        {attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup"]})
+                        {attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup","parentId"]})
         .then(user => {
           res.status(200).json(user);
         }).catch(error => {
@@ -93,13 +94,14 @@ exports.updateUser = async (req, res) => {
                 email: req.body.email,
                 phone_number: req.body.phone_number,
                 dob: req.body.dob,
-                bloodGroup: req.body.bloodGroup
+                bloodGroup: req.body.bloodGroup,
+                parentId: req.body.parentId
             }
             let result = await User.update(updatedObject,
                               { 
                                 returning: true, 
                                 where: {id: userId},
-                                attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup"]
+                                attributes: ['id', 'name', 'email', 'phone_number', 'dob', "bloodGroup","parentId"]
                               }
                             );
 
