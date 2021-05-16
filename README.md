@@ -1,3 +1,4 @@
 # React-CRUD-Setup
-MUI-Datatables CRUD Example
-Simple example of React CRUD operation with MUI-Datatables.
+https://material-table.com/#/
+Material-table CRUD Example
+Simple example of React CRUD operation with Material-table.
