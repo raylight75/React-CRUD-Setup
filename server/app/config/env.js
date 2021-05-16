@@ -1,9 +1,9 @@
 const env = {
-  database: 'employeeSystem',
-  username: 'user_iptvpro',
-  password: '0X0UhTdSBkvkcSMm',
+  database: 'employeesystem',
+  username: 'root',
+  password: '',
   host: 'localhost',
-  port: '7999',
+  port: '3306',
   dialect: 'mysql',
   pool: {
     max: 5,

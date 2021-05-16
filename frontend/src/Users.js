@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { forwardRef } from 'react';
 import Avatar from 'react-avatar';
-//import Grid from '@material-ui/core/Grid'
+import Select from 'react-select';
 
 import MaterialTable from "material-table";
 import AddBox from '@material-ui/icons/AddBox';
@@ -70,9 +70,16 @@ function validateEmail(email) {
 
 function Users() {
 
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+    ]
+
     var columns = [
         { title: "id", field: "id", hidden: true },
         { title: "Avatar", render: rowData => <Avatar maxInitials={1} size={40} round={true} name={rowData === undefined ? " " : rowData.name} /> },
+        { title: "Select", render: rowData => <Select options={options} /> },
         { title: "Name", field: "name" },
         { title: "Email", field: "email" },
         { title: "Phone", field: "phone_number" },
@@ -84,7 +91,6 @@ function Users() {
     const [formData, setFormData] = useReducer(formReducer, {
         count: 100
     });
-    const [submitting, setSubmitting] = useState(false);
     //for error handling
     const [iserror, setIserror] = useState(false)
     const [errorMessages, setErrorMessages] = useState([])
@@ -98,26 +104,6 @@ function Users() {
                 console.log("Error")
             })
     }, [])
-
-    const handleSubmit = event => {
-        event.preventDefault();
-        setSubmitting(true);
-
-        setTimeout(() => {
-            setSubmitting(false);
-            setFormData({
-                reset: true
-            })
-        }, 3000);
-    }
-
-
-    const handleChange = event => {
-        setFormData({
-            name: event.target.name,
-            value: event.target.value,
-        });
-    }
 
     const handleRowUpdate = (newData, oldData, resolve) => {
         //validation
@@ -253,6 +239,7 @@ function Users() {
                 title="Users"
                 columns={columns}
                 data={data}
+                parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
                 icons={tableIcons}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
@@ -286,53 +273,6 @@ function Users() {
                     }
                 ]}
             />
-            <div className="wrapper">
-                <h1>Form multiple field Example</h1>
-                {submitting &&
-                    <div>
-                        You are submitting the following:
-                        <ul>
-                            {Object.entries(formData).map(([name, value]) => (
-                                <li key={name}><strong>{name}</strong>:{value.toString()}</li>
-                            ))}
-                        </ul>
-                    </div>
-                }
-                <form onSubmit={handleSubmit}>
-                    <fieldset disabled={submitting}>
-                        <label>
-                            <p>Name</p>
-                            <input name="name" onChange={handleChange} value={formData.name} />
-                        </label>
-                    </fieldset>
-                    <fieldset disabled={submitting}>
-                        <label>
-                            <p>Apples</p>
-                            <select name="apple" onChange={handleChange} value={formData.apple}>
-                                <option value="">--Please choose an option--</option>
-                                <option value="fuji">Fuji</option>
-                                <option value="jonathan">Jonathan</option>
-                                <option value="honey-crisp">Honey Crisp</option>
-                            </select>
-                        </label>
-                        <label>
-                            <p>Count</p>
-                            <input type="number" name="count" onChange={handleChange} step="1" value={formData.count} />
-                        </label>
-                        <label>
-                            <p>Gift Wrap</p>
-                            <input
-                                checked={formData['gift-wrap']}
-                                disabled={formData.apple !== 'fuji'}
-                                name="gift-wrap"
-                                onChange={handleChange}
-                                type="checkbox"
-                            />
-                        </label>
-                    </fieldset>
-                    <button type="submit" disabled={submitting}>Submit</button>
-                </form>
-            </div>
         </div>
     );
 }

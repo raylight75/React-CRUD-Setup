@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Customers from './Customers';
 import Users from './Users'
+import Forms from './Forms'
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           <div className="header-right">
             <a href="/customers">Customers</a>
             <a href="/users">Users</a>
+            <a href="/forms">Forms</a>
           </div>
         </div>
         <img src={logo} className="App-logo" alt="logo" />
@@ -21,6 +23,7 @@ class App extends Component {
           <Switch>
             <Route path='/customers' component={Customers} />
             <Route path='/users' component={Users} />
+            <Route path='/forms' component={Forms} />
           </Switch>
         </Router>
       </div>
